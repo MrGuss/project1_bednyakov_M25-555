@@ -1,5 +1,5 @@
 from .constants import ROOMS
-from .utils import stupid_print
+from .utils import random_event, stupid_print
 
 
 def show_inventory(game_state):
@@ -24,6 +24,7 @@ def move_player(game_state, direction):
     if direction in cur_room['exits']:
         game_state['current_room'] = cur_room['exits'][direction]
         game_state['steps_taken'] += 1
+        random_event(game_state)
     else:
         stupid_print("Вы не можете двигаться в этом направлении.")
 

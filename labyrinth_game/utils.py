@@ -1,15 +1,15 @@
-import random
 import time
+from math import sin
 
 from labyrinth_game.constants import ROOMS
 
 
 # Attention! For debug you can set delay to zero, it will work like a regular print
-# I made this funcction esthetic reasons
+# I made this function for aesthetic reasons
 def stupid_print(text="", delay=0.02, end="\n"):
     for char in text:
         print(char, end='', flush=True)
-        time.sleep(delay+(random.random()-0.5)*delay)
+        time.sleep(delay)
     print(end=end)
 
 
@@ -85,3 +85,39 @@ def show_help():
     stupid_print("  solve           - попытаться решить загадку в комнате")
     stupid_print("  quit            - выйти из игры")
     stupid_print("  help            - показать это сообщение")
+
+
+def pseudo_random(seed, modulo):
+    return int(sin(seed*13.776) * 234.123 % 1 * modulo)
+
+
+def trigger_trap(game_state):
+    stupid_print("Ловушка активирована! Пол стал дрожать...")
+    if len(game_state['inventory']) == 0:
+        damag = pseudo_random(game_state['steps_taken'], 9)
+        if damag < 3:
+            stupid_print("Вы умерли!")
+            game_state['game_over'] = True
+        else:
+            stupid_print("На сей раз вам удалось избежать смерти...")
+        return
+
+    random_index = pseudo_random(game_state['steps_taken'], len(game_state['inventory'])-1)
+    item = game_state['inventory'].pop(random_index)
+    stupid_print(f"Вы потеряли {item}!")
+
+
+def random_event(game_state):
+    chance = pseudo_random(game_state['steps_taken'], 10)
+    if chance == 0:
+        kind = pseudo_random(game_state['steps_taken'], 2)
+        if kind == 0:
+            stupid_print("Вы увидели на полу монетку.")
+            ROOMS[game_state['current_room']]['items'].append('coin')
+        if kind == 1:
+            stupid_print("Вы слышите шорох в углу комнаты.")
+            if 'sword' in game_state['inventory']:
+                stupid_print("Вы отпугнули монстра мечем.")
+        if kind == 2:
+            if game_state['current_room'] == 'trap_room' and 'torch' not in game_state['inventory']:
+                trigger_trap(game_state)
