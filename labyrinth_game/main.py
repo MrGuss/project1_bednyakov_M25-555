@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
+from .constants import COMMANDS
 from .player_actions import get_input, move_player, show_inventory, take_item, use_item
-from .utils import describe_current_room, show_help, solve_puzzle, stupid_print
+from .utils import attempt_open_treasure, describe_current_room, show_help, solve_puzzle, stupid_print
 
 game_state = {
     'player_inventory': [],  # Инвентарь игрока
@@ -23,6 +24,14 @@ def process_command(game_state, command):
                 stupid_print("go принимает один аргумент: go <направление>.")
                 return
             move_player(game_state, args[0].lower())
+        case 'north':
+            move_player(game_state, 'north')
+        case 'south':
+            move_player(game_state, 'south')
+        case 'east':
+            move_player(game_state, 'east')
+        case 'west':
+            move_player(game_state, 'west')
         case 'take':
             if len(args) != 1:
                 stupid_print("take принимает один аргумент: take <название предмета>.")
@@ -34,11 +43,14 @@ def process_command(game_state, command):
                 return
             use_item(game_state, args[0].lower())
         case 'solve':
-            solve_puzzle(game_state)
+            if game_state['current_room'] == 'treasure_room':
+                attempt_open_treasure(game_state)
+            else:
+                solve_puzzle(game_state)
         case 'look':
             describe_current_room(game_state)
         case 'help':
-            show_help()
+            show_help(COMMANDS)
         case _:
             stupid_print("Непонятная команда.")
 

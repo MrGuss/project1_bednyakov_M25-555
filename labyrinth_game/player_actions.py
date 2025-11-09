@@ -22,6 +22,11 @@ def get_input(prompt="> "):
 def move_player(game_state, direction):
     cur_room = ROOMS[game_state['current_room']]
     if direction in cur_room['exits']:
+        if cur_room['exits'][direction] == 'treasure_room':
+            if 'rusty_key' not in game_state['player_inventory']:
+                stupid_print("Дверь заперта. Нужен ключ, чтобы пройти дальше.")
+                return
+            stupid_print("Вы используете найденный ключ, чтобы открыть путь в комнату сокровищ.")
         game_state['current_room'] = cur_room['exits'][direction]
         game_state['steps_taken'] += 1
         random_event(game_state)
@@ -50,6 +55,7 @@ def use_item(game_state, item_name):
             case 'sword':
                 stupid_print("Ощущая рукоять меча вы наполняетесь решимостью.")
             case 'bronze_box':
+                game_state['player_inventory'].remove('bronze_box')
                 stupid_print("Вам удалось открыть шкатулку. В ней лежит ключ.")
                 game_state['player_inventory'].append('rusty_key')
             case _:

@@ -18,7 +18,7 @@ def describe_current_room(game_state):
     stupid_print(f"*** {cur_room.upper()} ***", end='\n\n')
     stupid_print(ROOMS[cur_room]['description'], end="\n\n")
     if ROOMS[cur_room]['items']:
-        stupid_print("Заметные прдметы:")
+        stupid_print("Заметные предметы:")
         for item in ROOMS[cur_room]['items']:
             stupid_print(f"- {item}")
     if ROOMS[cur_room]['exits']:
@@ -42,12 +42,14 @@ def solve_puzzle(game_state):
     stupid_print(cur_room['puzzle'][0])
     stupid_print("Ваш ответ: ", end="")
     answer = input().lower()
-    if answer == cur_room['puzzle'][1]:
+    if answer in cur_room['puzzle'][1]:
         stupid_print("Успех!")
         game_state['player_inventory'].append(cur_room['puzzle'][2])
         cur_room['puzzle'] = None
     else:
         stupid_print("Неверно. Попробуйте снова.")
+        if game_state['current_room'] == 'trap_room':
+            trigger_trap(game_state)
 
 
 def attempt_open_treasure(game_state):
@@ -75,16 +77,10 @@ def attempt_open_treasure(game_state):
                 stupid_print("Код неверный. Вы отступаете от сундука.")
 
 
-def show_help():
+def show_help(commands):
     stupid_print("\nДоступные команды:")
-    stupid_print("  go <direction>  - перейти в направлении (north/south/east/west)")
-    stupid_print("  look            - осмотреть текущую комнату")
-    stupid_print("  take <item>     - поднять предмет")
-    stupid_print("  use <item>      - использовать предмет из инвентаря")
-    stupid_print("  inventory       - показать инвентарь")
-    stupid_print("  solve           - попытаться решить загадку в комнате")
-    stupid_print("  quit            - выйти из игры")
-    stupid_print("  help            - показать это сообщение")
+    for command in commands:
+        stupid_print(f"{command:<16} {commands[command]}")
 
 
 def pseudo_random(seed, modulo):
@@ -108,8 +104,9 @@ def trigger_trap(game_state):
 
 
 def random_event(game_state):
+    # TODO: Adjust random events
     chance = pseudo_random(game_state['steps_taken'], 10)
-    if chance == 0:
+    if chance <= 1:
         kind = pseudo_random(game_state['steps_taken'], 2)
         if kind == 0:
             stupid_print("Вы увидели на полу монетку.")
