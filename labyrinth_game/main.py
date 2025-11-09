@@ -13,6 +13,7 @@ game_state = {
 
 
 def process_command(game_state, command):
+    """Process the command entered by the user and forward it to the appropriate function."""
     tool, *args = command.split()
     match tool:
         case 'quit':
@@ -56,6 +57,7 @@ def process_command(game_state, command):
 
 
 def main():
+    """Main game loop."""
     print("Добро пожаловать в Лабиринт сокровищ!")
     describe_current_room(game_state)
     while not game_state['game_over']:

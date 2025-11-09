@@ -4,6 +4,7 @@ from labyrinth_game.constants import EVENT_PROBABILITY, KIND_PROBABILITY, ROOMS
 
 
 def describe_current_room(game_state):
+    """Prints a description of the current room."""
     cur_room = game_state['current_room']
     print(f"*** {cur_room.upper()} ***", end='\n\n')
     print(ROOMS[cur_room]['description'], end="\n\n")
@@ -21,6 +22,7 @@ def describe_current_room(game_state):
 
 
 def solve_puzzle(game_state):
+    """Prompts the user to solve the puzzle in the current room."""
     cur_room = ROOMS[game_state['current_room']]
     if game_state['current_room'] == 'treasure_room':
         attempt_open_treasure(game_state)
@@ -43,6 +45,7 @@ def solve_puzzle(game_state):
 
 
 def attempt_open_treasure(game_state):
+    """Attempts to open the treasure chest in the treasure room."""
     if 'treasure_key' in game_state['player_inventory']:
         print("Вы применяете ключ, и замок щёлкает. Сундук открыт!")
         ROOMS['treasure_room']['items'].remove('treasure_chest')
@@ -68,16 +71,19 @@ def attempt_open_treasure(game_state):
 
 
 def show_help(commands):
+    """Prints a list of available commands."""
     print("\nДоступные команды:")
     for command in commands:
         print(f"{command:<16} {commands[command]}")
 
 
 def pseudo_random(seed, modulo):
+    """Generates a pseudo-random number based on a seed and a modulo value."""
     return int(sin(seed*13.776) * 234.123 % 1 * modulo)
 
 
 def trigger_trap(game_state):
+    """Activates a trap in the trap room."""
     print("Ловушка активирована! Пол стал дрожать...")
     if len(game_state['player_inventory']) == 0:
         damag = pseudo_random(game_state['steps_taken'], 9)
@@ -94,7 +100,7 @@ def trigger_trap(game_state):
 
 
 def random_event(game_state):
-    # TODO: Adjust random events
+    """Applies a random event to the game state."""
     chance = pseudo_random(game_state['steps_taken'], EVENT_PROBABILITY)
     if chance <= 4:
         kind = pseudo_random(game_state['steps_taken'], KIND_PROBABILITY)
