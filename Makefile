@@ -1,7 +1,7 @@
 install:
 	poetry install
 
-run:
+project:
 	poetry run project
 
 build:
