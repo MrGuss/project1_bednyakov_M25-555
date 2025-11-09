@@ -51,3 +51,7 @@ COMMANDS = {
     "quit": "выйти из игры",
     "help": "показать это сообщение"
 }
+
+EVENT_PROBABILITY = 10
+
+KIND_PROBABILITY = 4

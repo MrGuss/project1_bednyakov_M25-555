@@ -2,7 +2,7 @@
 
 from .constants import COMMANDS
 from .player_actions import get_input, move_player, show_inventory, take_item, use_item
-from .utils import attempt_open_treasure, describe_current_room, show_help, solve_puzzle, stupid_print
+from .utils import attempt_open_treasure, describe_current_room, show_help, solve_puzzle
 
 game_state = {
     'player_inventory': [],  # Инвентарь игрока
@@ -21,7 +21,7 @@ def process_command(game_state, command):
             show_inventory(game_state)
         case 'go':
             if len(args) != 1:
-                stupid_print("go принимает один аргумент: go <направление>.")
+                print("go принимает один аргумент: go <направление>.")
                 return
             move_player(game_state, args[0].lower())
         case 'north':
@@ -34,12 +34,12 @@ def process_command(game_state, command):
             move_player(game_state, 'west')
         case 'take':
             if len(args) != 1:
-                stupid_print("take принимает один аргумент: take <название предмета>.")
+                print("take принимает один аргумент: take <название предмета>.")
                 return
             take_item(game_state, args[0].lower())
         case 'use':
             if len(args) != 1:
-                stupid_print("use принимает один аргумент: use <название предмета>.")
+                print("use принимает один аргумент: use <название предмета>.")
                 return
             use_item(game_state, args[0].lower())
         case 'solve':
@@ -52,17 +52,17 @@ def process_command(game_state, command):
         case 'help':
             show_help(COMMANDS)
         case _:
-            stupid_print("Непонятная команда.")
+            print("Непонятная команда.")
 
 
 def main():
-    stupid_print("Добро пожаловать в Лабиринт сокровищ!")
+    print("Добро пожаловать в Лабиринт сокровищ!")
     describe_current_room(game_state)
     while not game_state['game_over']:
         player_input = get_input()
         process_command(game_state, player_input)
 
-    stupid_print("Спасибо за игру!")
+    print("Спасибо за игру!")
 
 
 if __name__ == "__main__":
