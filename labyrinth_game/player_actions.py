@@ -3,6 +3,7 @@ from .utils import random_event
 
 
 def show_inventory(game_state):
+    """Takes game_state and prints the player's inventory."""
     print("Ваш инвентарь:")
     if len(game_state['player_inventory']) == 0:
         print("  Пусто")
@@ -12,6 +13,7 @@ def show_inventory(game_state):
 
 
 def get_input(prompt="> "):
+    """Prompts the user input and returns it."""
     try:
         return input(prompt)
     except (KeyboardInterrupt, EOFError):
@@ -20,6 +22,7 @@ def get_input(prompt="> "):
 
 
 def move_player(game_state, direction):
+    """Moves the player in the specified direction if possible, applying random events along the way."""
     cur_room = ROOMS[game_state['current_room']]
     if direction in cur_room['exits']:
         if cur_room['exits'][direction] == 'treasure_room':
@@ -35,6 +38,7 @@ def move_player(game_state, direction):
 
 
 def take_item(game_state, item_name):
+    """Takes an item from the current room and adds it to the player's inventory if possible."""
     cur_room = ROOMS[game_state['current_room']]
     if item_name in cur_room['items']:
         if item_name == 'treasure_chest':
@@ -48,6 +52,7 @@ def take_item(game_state, item_name):
 
 
 def use_item(game_state, item_name):
+    """Uses an item from the player's inventory if possible."""
     if item_name in game_state['player_inventory']:
         match item_name:
             case 'torch':
